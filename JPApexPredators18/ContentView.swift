@@ -6,13 +6,16 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct ContentView: View {
     let predators = Predators()
     @State var isSortByAlphabetical = false
     @State var searchQuery = ""
+    @State var currenntSelectedType = PredatorType.all
     
     var filteredDinos: [ApexPredator] {
+        predators.filterPredator(by: currenntSelectedType)
         predators.sortPredator(isSortByAlphabetical: isSortByAlphabetical)
         return predators.search(for: searchQuery)
     }
@@ -21,9 +24,7 @@ struct ContentView: View {
         NavigationStack{
             List(filteredDinos) { predator in
                 NavigationLink {
-                    Image(predator.image)
-                        .resizable()
-                        .scaledToFit()
+                    PredatorDetail(predator: predator, position: .camera(MapCamera(centerCoordinate: predator.location, distance: 30000)))
                 }
                 label : {
                     HStack {
@@ -53,11 +54,25 @@ struct ContentView: View {
             .toolbar{
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
-                        isSortByAlphabetical.toggle()
+                        withAnimation {
+                            isSortByAlphabetical.toggle()
+                        }
                     }
                     label:{
-                        isSortByAlphabetical ? Image(systemName: "film") : Image(systemName: "textformat")
+                         Image(systemName: isSortByAlphabetical ? "film" : "textformat")
+                            .symbolEffect(.bounce, value: isSortByAlphabetical)
                     }
+                }
+                ToolbarItem (placement: .topBarTrailing) {
+                    Menu {
+                        Picker("Filter", selection: $currenntSelectedType.animation()) {
+                            ForEach(PredatorType.allCases) { predatorType in
+                                Label(predatorType.rawValue.capitalized, systemImage: predatorType.filterIcon)
+                                
+                            }
+                        }
+                    }
+                    label: {Image(systemName: "slider.horizontal.3")}
                 }
             }
         }
