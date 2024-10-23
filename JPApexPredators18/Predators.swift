@@ -63,4 +63,16 @@ class Predators {
         }
 
     }
+    
+    func filterPredatorByMovie(by movie: Movie) {
+        if movie == .all {
+            apexPredators = allApexPredators
+        }
+        else {
+            apexPredators = allApexPredators.filter{ predator in
+                predator.movies.contains(movie.rawValue)
+            }
+        }
+
+    }
 }

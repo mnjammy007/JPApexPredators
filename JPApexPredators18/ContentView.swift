@@ -13,9 +13,11 @@ struct ContentView: View {
     @State var isSortByAlphabetical = false
     @State var searchQuery = ""
     @State var currenntSelectedType = PredatorType.all
+    @State var currenntSelectedMovie = Movie.all
     
     var filteredDinos: [ApexPredator] {
         predators.filterPredator(by: currenntSelectedType)
+        predators.filterPredatorByMovie(by: currenntSelectedMovie)
         predators.sortPredator(isSortByAlphabetical: isSortByAlphabetical)
         return predators.search(for: searchQuery)
     }
@@ -64,15 +66,28 @@ struct ContentView: View {
                     }
                 }
                 ToolbarItem (placement: .topBarTrailing) {
-                    Menu {
-                        Picker("Filter", selection: $currenntSelectedType.animation()) {
-                            ForEach(PredatorType.allCases) { predatorType in
-                                Label(predatorType.rawValue.capitalized, systemImage: predatorType.filterIcon)
-                                
+                    HStack {
+                        
+                        Menu {
+                            Picker("Filter", selection: $currenntSelectedMovie.animation()) {
+                                ForEach(Movie.allCases) { movie in
+                                    Label(movie.rawValue, systemImage: "globe")
+                                    
+                                }
                             }
                         }
+                        label: {Image(systemName: "video.fill")}
+                        
+                        Menu {
+                            Picker("Filter", selection: $currenntSelectedType.animation()) {
+                                ForEach(PredatorType.allCases) { predatorType in
+                                    Label(predatorType.rawValue.capitalized, systemImage: predatorType.filterIcon)
+                                    
+                                }
+                            }
+                        }
+                        label: {Image(systemName: "slider.horizontal.3")}
                     }
-                    label: {Image(systemName: "slider.horizontal.3")}
                 }
             }
         }

@@ -82,3 +82,17 @@ enum PredatorType: String, Decodable, CaseIterable, Identifiable {
 //    }
 //    This is not required as predator.type.rawValue will work, as it is same a image resource name
 }
+
+enum Movie: String, CaseIterable, Identifiable{
+    case all = "All"
+    case jurassicPark = "Jurassic Park"
+    case theLostWorld = "The Lost World: Jurassic Park"
+    case jurassicPark3 = "Jurassic Park III"
+    case jurassicWorld = "Jurassic World"
+    case jurassicWorldFK = "Jurassic World: Fallen Kingdom"
+    case jurassicWorldD = "Jurassic World: Dominion"
+    
+    var id: Movie{
+        self
+    }
+}

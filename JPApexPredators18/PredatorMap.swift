@@ -12,6 +12,7 @@ struct PredatorMap: View {
     let predators: [ApexPredator] = Predators().allApexPredators
     @State var position: MapCameraPosition
     @State var isSatteliteViewActive = false
+    @State var isPopOverVisible = false
     
     var body: some View {
         Map(position: $position){
@@ -23,6 +24,21 @@ struct PredatorMap: View {
                         .frame(height: 100)
                         .shadow(color: .white, radius: 3)
                         .scaleEffect(x: -1)
+                        .onTapGesture {
+                            isPopOverVisible.toggle()
+                        }
+                        .popover(isPresented: $isPopOverVisible, arrowEdge: .bottom) {
+                            VStack {
+                                HStack {
+                                    Text(predator.name)
+                                        .font(.title)
+                                    Text(" - \(predator.type.rawValue)")
+                                        .font(.title3)
+                                }
+                                .padding()
+                            }
+                            .presentationCompactAdaptation(.popover)
+                        }
                 }
             }
         }
